@@ -8,8 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class DetailActivity extends AppCompatActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-
+        TextView forecastTV;
         public PlaceholderFragment() {
         }
 
@@ -56,6 +58,9 @@ public class DetailActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            String forecast = getActivity().getIntent().getStringExtra("forecastString");
+            forecastTV=(TextView) rootView.findViewById(R.id.tv_forcast);
+            forecastTV.setText(forecast);
             return rootView;
         }
     }

@@ -36,6 +36,7 @@ import java.util.ArrayList;
 public  class ForecastFragment extends Fragment {
     String TAG=ForecastFragment.class.getSimpleName();
     final static String appid="2de143494c0b295cca9337e1e96b00e0";
+
     ArrayList<String> tempInfo;
     ArrayAdapter<String> mArrayAdapter;
 
@@ -85,6 +86,7 @@ public  class ForecastFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.v(TAG,mArrayAdapter.getItem(position));
                 Intent i = new Intent (getActivity(),DetailActivity.class);
+                i.putExtra("forecastString",mArrayAdapter.getItem(position));
                 startActivity(i);
             }
         });
