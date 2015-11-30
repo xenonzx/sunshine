@@ -8,10 +8,11 @@
         android:singleLine="true"
         android:hint="@string/prefs_location_hint"/>
     <ListPreference
-        android:key="PREF_LIST"
-        android:title="ListPreference title"
-        android:summary="ListPreference summary"
-        android:entries="@array/listentries"
-        android:entryValues="@array/listvalues" />
+        android:key="@string/pref_temp_setting_key"
+        android:title="@string/pref_temp_setting_title"
+        android:summary="@string/pref_temp_setting_summery"
+        android:defaultValue="@string/pref_temp_setting_default"
+        android:entries="@array/pref_temp_settings_entries"
+        android:entryValues="@array/pref_temp_settings_values" />
 
 </PreferenceScreen>

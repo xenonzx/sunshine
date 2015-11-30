@@ -1,6 +1,5 @@
 package com.luxtech_eg.sunshine;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -32,6 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by ahmed on 26/11/15.
@@ -76,6 +76,13 @@ public  class ForecastFragment extends Fragment {
         }
         if (item.getItemId() == R.id.action_settings) {
             Intent i = new Intent( getActivity(),SettingsActivity.class );
+            startActivity(i);
+            return true;
+        }
+        if (item.getItemId() == R.id.action_map) {
+            String uri = String.format(Locale.ENGLISH, "geo:0,0?q="+sp.getString(getString(R.string.prefs_location_key),"def"));
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+
             startActivity(i);
             return true;
         }
@@ -132,10 +139,22 @@ public  class ForecastFragment extends Fragment {
      */
     private String formatHighLows(double high, double low) {
         // For presentation, assume the user doesn't care about tenths of a degree.
+        Log.v(TAG, sp.getString(getString(R.string.pref_temp_setting_key),"def"));
+        if (sp.getString(getString(R.string.pref_temp_setting_key),"def")==getString(R.string.pref_temp_setting_fahrenheit)){
+            //converting from cels to f
+            high=high*1.8+32;
+            low=low*1.8+32;
+        }
         long roundedHigh = Math.round(high);
         long roundedLow = Math.round(low);
 
         String highLowStr = roundedHigh + "/" + roundedLow;
+        if (sp.getString(getString(R.string.pref_temp_setting_key),"def")==getString(R.string.pref_temp_setting_fahrenheit)){
+            highLowStr=highLowStr+"F";
+        }
+        else{
+            highLowStr=highLowStr+"C";
+        }
         return highLowStr;
     }
 
@@ -253,7 +272,7 @@ public  class ForecastFragment extends Fragment {
                         .appendPath("2.5")
                         .appendPath("forecast")
                         .appendPath("daily")
-                        .appendQueryParameter("q", postcode + ",USA")
+                        .appendQueryParameter("q", postcode )
                         .appendQueryParameter("mode", "json")
                         .appendQueryParameter("units", "metric")
                         .appendQueryParameter("cnt", "7")
