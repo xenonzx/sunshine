@@ -3,4 +3,22 @@
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
     <string name="hello_world">hello</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="prefs_location_title" translatable="true">Location</string>
+    <string name="prefs_location_hint" translatable="true">please input your location</string>
+    <string name="prefs_location_key" translatable="false">location</string>
+    <string name="prefs_location_default_value" translatable="false">94043</string>
+
+    <string-array name="temp_settings_entries">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+    </string-array>
+    <string-array name="temp_settings_values">
+        <item>c</item>
+        <item>f</item>
+    </string-array>
+
 </resources>

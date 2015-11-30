@@ -1,9 +1,12 @@
 package com.luxtech_eg.sunshine;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -39,6 +42,7 @@ public  class ForecastFragment extends Fragment {
 
     ArrayList<String> tempInfo;
     ArrayAdapter<String> mArrayAdapter;
+    SharedPreferences sp;
 
     public ForecastFragment() {
     }
@@ -49,6 +53,14 @@ public  class ForecastFragment extends Fragment {
         //should say that this fragment has options menu
         setHasOptionsMenu(true);
         tempInfo= new ArrayList<String>();
+
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
     }
 
     @Override
@@ -59,13 +71,25 @@ public  class ForecastFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==R.id.action_refresh){
-            Log.v(TAG, "refresh clicked");
-            String mountainViewPostCode="94043";
-            new FetchWeatherTask().execute(mountainViewPostCode);
-            // true means the event was consumed
+            updateWeather();
+            return true;
+        }
+        if (item.getItemId() == R.id.action_settings) {
+            Intent i = new Intent( getActivity(),SettingsActivity.class );
+            startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void updateWeather(){
+        Log.v(TAG, "refresh clicked");
+        String key=getString(R.string.prefs_location_key);
+        String defVal = getString(R.string.prefs_location_default_value);
+
+        String mountainViewPostCode=sp.getString(key,defVal);
+        //Log.v(TAG, sp.getString(key, defVal));
+        new FetchWeatherTask().execute(mountainViewPostCode);
+        // true means the event was consumed
     }
 
     @Override
