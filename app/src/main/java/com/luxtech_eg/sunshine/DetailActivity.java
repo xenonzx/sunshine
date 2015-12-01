@@ -3,16 +3,20 @@ package com.luxtech_eg.sunshine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
-
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.detail, menu);
+
         return true;
     }
 
@@ -40,11 +45,15 @@ public class DetailActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent i = new Intent( DetailActivity.this,SettingsActivity.class );
+            Intent i = new Intent(DetailActivity.this, SettingsActivity.class);
             startActivity(i);
             return true;
         }
+        if (id == R.id.menu_item_share) {
 
+
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -52,8 +61,10 @@ public class DetailActivity extends AppCompatActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+        String TAG=PlaceholderFragment.class.getSimpleName();
         TextView forecastTV;
         public PlaceholderFragment() {
+            setHasOptionsMenu(true);
         }
 
         @Override
@@ -65,6 +76,30 @@ public class DetailActivity extends AppCompatActivity {
             forecastTV=(TextView) rootView.findViewById(R.id.tv_forcast);
             forecastTV.setText(forecast);
             return rootView;
+        }
+        Intent createShareIntent(){
+            Intent mShareIntent = new Intent();
+            mShareIntent.setAction(Intent.ACTION_SEND);
+            mShareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            mShareIntent.setType("text/plain");
+            mShareIntent.putExtra(Intent.EXTRA_TEXT,getActivity().getIntent().getStringExtra("forecastString") + "#SUNSHINE");
+            return  mShareIntent;
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.detailfragment,menu);
+            MenuItem item = menu.findItem(R.id.menu_item_share);
+
+            // for compatibility  MenuItemCompat
+            ShareActionProvider mShareActionProvider =(ShareActionProvider) MenuItemCompat.getActionProvider(item);
+            if (mShareActionProvider!=null){
+                mShareActionProvider.setShareIntent(createShareIntent());
+            }
+            else{
+                Log.d(TAG,"share action provider is null");
+            }
+
         }
     }
 }

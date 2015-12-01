@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,13 +81,22 @@ public  class ForecastFragment extends Fragment {
             return true;
         }
         if (item.getItemId() == R.id.action_map) {
-            String uri = String.format(Locale.ENGLISH, "geo:0,0?q="+sp.getString(getString(R.string.prefs_location_key),"def"));
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            openMaps();
 
-            startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    void openMaps(){
+        String uri = String.format(Locale.ENGLISH, "geo:0,0?q="+sp.getString(getString(R.string.prefs_location_key),"def"));
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        if (i.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(i);
+        }
+        else{
+            Log.e(TAG,"no maps package was found");
+            Toast.makeText(getActivity(),"no maps package was found",Toast.LENGTH_LONG).show();
+        }
     }
     public void updateWeather(){
         Log.v(TAG, "refresh clicked");
