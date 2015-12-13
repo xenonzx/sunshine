@@ -18,6 +18,7 @@
     <string name="pref_temp_setting_title">temperature measurement unit</string>
     <string name="pref_temp_setting_summery">choose measurement unit </string>
     <string name="pref_temp_setting_default">c</string>
+    <string name="pref_temp_setting_celsius">c</string>
     <string name="pref_temp_setting_fahrenheit">f</string>
     <string-array name="pref_temp_settings_entries">
         <item>Celsius</item>

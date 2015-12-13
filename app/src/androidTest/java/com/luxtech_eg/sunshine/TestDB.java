@@ -17,7 +17,7 @@ public class TestDB extends AndroidTestCase {
     static final String TEST_LOCATION = "99705";
     static final long TEST_DATE = 1419033600L;
 
-    void testLocationTable(){
+    public void testLocationTable(){
         WeatherDbHelper dbHelper= new WeatherDbHelper(mContext);
         SQLiteDatabase db=dbHelper.getReadableDatabase();
         ContentValues testValues =TestUtilities.createNorthPoleLocationValues();
