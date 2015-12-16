@@ -2,6 +2,7 @@ package com.luxtech_eg.sunshine;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,10 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.luxtech_eg.sunshine.data.WeatherContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,11 +32,12 @@ import java.util.Locale;
  * Created by ahmed on 26/11/15.
  */
 public  class ForecastFragment extends Fragment {
+    static final int FORECAST_LOADER_ID=0;
     String TAG=ForecastFragment.class.getSimpleName();
     final static String appid="2de143494c0b295cca9337e1e96b00e0";
 
     ArrayList<String> tempInfo;
-    ArrayAdapter<String> mArrayAdapter;
+    ForecastAdapter mForecastAdapter;
     SharedPreferences sp;
 
     public ForecastFragment() {
@@ -98,14 +100,15 @@ public  class ForecastFragment extends Fragment {
 
         String mountainViewPostCode=sp.getString(key,defVal);
         //Log.v(TAG, sp.getString(key, defVal));
-        new FetchWeatherTask().execute(mountainViewPostCode);
-        // true means the event was consumed
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+        String location = Utility.getPreferredLocation(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        String locationSetting = Utility.getPreferredLocation(getActivity());
         ListView lv= (ListView)rootView.findViewById(R.id.listview_forcast);
 
         tempInfo.add("today-23");
@@ -113,17 +116,14 @@ public  class ForecastFragment extends Fragment {
         tempInfo.add("mon-23");
         tempInfo.add("tuey-23");
 
-        mArrayAdapter= new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,tempInfo);
-        lv.setAdapter(mArrayAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.v(TAG,mArrayAdapter.getItem(position));
-                Intent i = new Intent (getActivity(),DetailActivity.class);
-                i.putExtra("forecastString",mArrayAdapter.getItem(position));
-                startActivity(i);
-            }
-        });
+
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+        locationSetting, System.currentTimeMillis());
+        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri, null, null, null, sortOrder);
+        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
+        lv.setAdapter(mForecastAdapter);
+
 
         return rootView;
     }
