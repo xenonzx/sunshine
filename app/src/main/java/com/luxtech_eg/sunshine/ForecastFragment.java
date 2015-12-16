@@ -1,5 +1,6 @@
 package com.luxtech_eg.sunshine;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -7,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +35,7 @@ import java.util.Locale;
 /**
  * Created by ahmed on 26/11/15.
  */
-public  class ForecastFragment extends Fragment {
+public  class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     static final int FORECAST_LOADER_ID=0;
     String TAG=ForecastFragment.class.getSimpleName();
     final static String appid="2de143494c0b295cca9337e1e96b00e0";
@@ -52,7 +56,10 @@ public  class ForecastFragment extends Fragment {
 
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
-
+    public void onActivityCreated(Bundle savedInstanceState) {
+               getLoaderManager().initLoader(FORECAST_LOADER_ID, null, this);
+               super.onActivityCreated(savedInstanceState);
+           }
     @Override
     public void onStart() {
         super.onStart();
@@ -102,6 +109,7 @@ public  class ForecastFragment extends Fragment {
         //Log.v(TAG, sp.getString(key, defVal));
         FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
         String location = Utility.getPreferredLocation(getActivity());
+        weatherTask.execute(location);
     }
 
     @Override
@@ -238,6 +246,30 @@ public  class ForecastFragment extends Fragment {
 
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        String locationSetting = Utility.getPreferredLocation(getActivity());
 
+        // Sort order:  Ascending, by date.
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                locationSetting, System.currentTimeMillis());
 
+        return new CursorLoader(getActivity(),
+                weatherForLocationUri,
+                null,
+                null,
+                null,
+                sortOrder);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        mForecastAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        mForecastAdapter.swapCursor(null);
+    }
 }
