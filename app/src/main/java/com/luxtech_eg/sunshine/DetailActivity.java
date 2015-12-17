@@ -63,6 +63,7 @@ public class DetailActivity extends AppCompatActivity {
     public static class PlaceholderFragment extends Fragment {
         String TAG=PlaceholderFragment.class.getSimpleName();
         TextView forecastTV;
+        String forecast;
         public PlaceholderFragment() {
             setHasOptionsMenu(true);
         }
@@ -72,9 +73,17 @@ public class DetailActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            String forecast = getActivity().getIntent().getStringExtra("forecastString");
             forecastTV=(TextView) rootView.findViewById(R.id.tv_forcast);
-            forecastTV.setText(forecast);
+
+            Intent intent = getActivity().getIntent();
+            if (intent != null) {
+                forecast = intent.getDataString();
+            }
+
+            //String forecast = getActivity().getIntent().getStringExtra("forecastString");
+            if(null!= forecast) {
+                forecastTV.setText(forecast);
+            }
             return rootView;
         }
         Intent createShareIntent(){
@@ -82,7 +91,8 @@ public class DetailActivity extends AppCompatActivity {
             mShareIntent.setAction(Intent.ACTION_SEND);
             mShareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
             mShareIntent.setType("text/plain");
-            mShareIntent.putExtra(Intent.EXTRA_TEXT,getActivity().getIntent().getStringExtra("forecastString") + "#SUNSHINE");
+            mShareIntent.putExtra(Intent.EXTRA_TEXT, forecast + "#SUNSHINE");
+            //mShareIntent.putExtra(Intent.EXTRA_TEXT, getActivity().getIntent().getStringExtra("forecastString") + "#SUNSHINE");
             return  mShareIntent;
         }
 
