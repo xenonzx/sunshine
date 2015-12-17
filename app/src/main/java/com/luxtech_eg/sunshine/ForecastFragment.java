@@ -39,6 +39,27 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     static final int FORECAST_LOADER_ID=0;
     String TAG=ForecastFragment.class.getSimpleName();
     final static String appid="2de143494c0b295cca9337e1e96b00e0";
+    private static final String[] FORECAST_COLUMNS = {
+        WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+                    WeatherContract.WeatherEntry.COLUMN_DATE,
+                    WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+                    WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+                    WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+                    WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+                    WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+                    WeatherContract.LocationEntry.COLUMN_LATITUDEE,
+                    WeatherContract.LocationEntry.COLUMN_LONGITUDE
+            };
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
+
 
     ArrayList<String> tempInfo;
     ForecastAdapter mForecastAdapter;
@@ -257,7 +278,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
 
         return new CursorLoader(getActivity(),
                 weatherForLocationUri,
-                null,
+                FORECAST_COLUMNS,
                 null,
                 null,
                 sortOrder);
