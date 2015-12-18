@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.TextView;
 
 import com.luxtech_eg.sunshine.data.WeatherContract;
 
@@ -68,7 +67,7 @@ public class ForecastAdapter extends CursorAdapter {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
 
-        TextView tv = (TextView)view;
-        tv.setText(convertCursorRowToUXFormat(cursor));
+        //TextView tv = (TextView)view;
+        //tv.setText(convertCursorRowToUXFormat(cursor));
     }
 }
