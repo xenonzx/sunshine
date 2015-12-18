@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.luxtech_eg.sunshine.data.WeatherContract;
 
@@ -13,11 +15,21 @@ import com.luxtech_eg.sunshine.data.WeatherContract;
  * Created by ahmed on 16/12/15.
  */
 public class ForecastAdapter extends CursorAdapter {
+    private static final int VIEW_TYPE_TODAY = 0;
+    private static final int VIEW_TYPE_FUTURE_DAY = 1;
+    private static final int VIEW_TYPE_COUNT = 2;
+
     Context mContext;
     public ForecastAdapter(Context context, Cursor c, int flags) {
 
         super(context, c, flags);
         mContext=context;
+    }
+    public int getItemViewType(int position) {
+        return position == 0 ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+    }
+    public int getViewTypeCount() {
+        return VIEW_TYPE_COUNT;
     }
 
     /**
@@ -54,9 +66,18 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
-
-        return view;
+        // Choose the layout type
+        int viewType = getItemViewType(cursor.getPosition());
+        int layoutId = -1;
+        // TODO: Determine layoutId from viewType
+        if(viewType==VIEW_TYPE_TODAY)
+        {
+            layoutId= R.layout.list_item_forecast_today;
+        }
+        else if(viewType==VIEW_TYPE_FUTURE_DAY)  {
+            layoutId= R.layout.list_item_forecast;
+        }
+        return LayoutInflater.from(context).inflate(layoutId, parent, false);
     }
 
     /*
@@ -67,7 +88,33 @@ public class ForecastAdapter extends CursorAdapter {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
 
-        //TextView tv = (TextView)view;
-        //tv.setText(convertCursorRowToUXFormat(cursor));
+        // Read weather icon ID from cursor
+        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_ID);
+        // Use placeholder image for now
+        ImageView iconView = (ImageView) view.findViewById(R.id.list_item_icon);
+        iconView.setImageResource(R.drawable.ic_launcher);
+
+        // TODO Read date from cursor
+        long date=cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
+        String friendlysDate=Utility.getFriendlyDayString(context, date);
+        TextView dateView= (TextView)view.findViewById(R.id.list_item_date_textview);
+        dateView.setText(friendlysDate);
+
+        // TODO Read weather forecast from cursor
+        String forecastDesc=cursor.getString(ForecastFragment.COL_WEATHER_DESC);
+        TextView forecastDescView= (TextView) view.findViewById(R.id.list_item_forecast_textview);
+        forecastDescView.setText(forecastDesc);
+        // Read user preference for metric or imperial temperature units
+        boolean isMetric = Utility.isMetric(context);
+
+        // Read high temperature from cursor
+        double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
+        TextView highView = (TextView) view.findViewById(R.id.list_item_high_textview);
+        highView.setText(Utility.formatTemperature(high, isMetric));
+
+        // TODO Read low temperature from cursor
+        double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+        TextView lowView = (TextView) view.findViewById(R.id.list_item_low_textview);
+        lowView.setText(Utility.formatTemperature(low, isMetric));
     }
 }
