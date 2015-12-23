@@ -62,15 +62,18 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     static final int COL_COORD_LONG = 8;
 
 
+
     ArrayList<String> tempInfo;
     ForecastAdapter mForecastAdapter;
     SharedPreferences sp;
 
     public ForecastFragment() {
+        Log.v(TAG, "ForecastFragment");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         //should say that this fragment has options menu
         setHasOptionsMenu(true);
@@ -84,17 +87,20 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
            }
     @Override
     public void onStart() {
+        Log.v(TAG, "onStart");
         super.onStart();
         updateWeather();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.v(TAG, "onCreateOptionsMenu");
         inflater.inflate(R.menu.forecastfragment,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(TAG, "onOptionsItemSelected");
         if (item.getItemId()==R.id.action_refresh){
             updateWeather();
             return true;
@@ -112,6 +118,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
         return super.onOptionsItemSelected(item);
     }
     void openMaps(){
+        Log.v(TAG, "openMaps");
         String uri = String.format(Locale.ENGLISH, "geo:0,0?q="+sp.getString(getString(R.string.prefs_location_key),"def"));
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         if (i.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -123,7 +130,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
         }
     }
     public void updateWeather(){
-        Log.v(TAG, "refresh clicked");
+        Log.v(TAG, "updateWeather");
         String key=getString(R.string.prefs_location_key);
         String defVal = getString(R.string.prefs_location_default_value);
 
@@ -137,6 +144,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         String locationSetting = Utility.getPreferredLocation(getActivity());
         ListView lv= (ListView)rootView.findViewById(R.id.listview_forcast);
@@ -162,12 +170,12 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     String locationSetting = Utility.getPreferredLocation(getActivity());
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
-                            ));
-                    startActivity(intent);
+                    ((Callback) getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                            locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                    ));
+
                 }
+
             }
         });
 
@@ -217,7 +225,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
      */
     private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
             throws JSONException {
-
+        Log.v(TAG, "getWeatherDataFromJson"+forecastJsonStr);
         // These are the names of the JSON objects that need to be extracted.
         final String OWM_LIST = "list";
         final String OWM_WEATHER = "weather";
@@ -287,6 +295,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Log.v(TAG, "onCreateLoader");
         String locationSetting = Utility.getPreferredLocation(getActivity());
 
         // Sort order:  Ascending, by date.
@@ -304,11 +313,29 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        Log.v(TAG, "onLoadFinished");
         mForecastAdapter.swapCursor(cursor);
+        //mForecastAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        Log.v(TAG, "onLoaderReset");
         mForecastAdapter.swapCursor(null);
+    }
+
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri dateUri);
+
+    }
+    void onLocationChanged() {
+        Log.v(TAG, "onLocationChanged");
+        // replace the uri, since the location has changed
+        updateWeather();
+        getLoaderManager().restartLoader(FORECAST_LOADER_ID, null, this);
+
     }
 }
