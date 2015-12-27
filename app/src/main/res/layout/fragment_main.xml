@@ -11,5 +11,6 @@ tools:context="com.luxtech_eg.sunshine.MainActivity$PlaceholderFragment">
 <ListView
     android:id="@+id/listview_forcast"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"></ListView>
+    android:layout_height="match_parent"
+    style="@style/ForecastListStyle"></ListView>
 </FrameLayout>

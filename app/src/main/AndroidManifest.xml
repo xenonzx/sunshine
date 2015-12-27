@@ -25,6 +25,7 @@
         <provider
             android:authorities="com.luxtech_eg.sunshine"
             android:name=".data.WeatherProvider"/>
+        <service android:name=".service.SunshineService"/>
     </application>
 
 </manifest>

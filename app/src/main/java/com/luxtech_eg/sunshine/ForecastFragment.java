@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.luxtech_eg.sunshine.data.WeatherContract;
+import com.luxtech_eg.sunshine.service.SunshineService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +41,9 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     static final int FORECAST_LOADER_ID=0;
     String TAG=ForecastFragment.class.getSimpleName();
     final static String appid="2de143494c0b295cca9337e1e96b00e0";
+    final static String SELECTED_KEY="selected_list_item";
+    private boolean mUseTodayLayout;
+
     private static final String[] FORECAST_COLUMNS = {
         WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
                     WeatherContract.WeatherEntry.COLUMN_DATE,
@@ -66,7 +70,8 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     ArrayList<String> tempInfo;
     ForecastAdapter mForecastAdapter;
     SharedPreferences sp;
-
+    int mPosition= ListView.INVALID_POSITION;
+    ListView lv;
     public ForecastFragment() {
         Log.v(TAG, "ForecastFragment");
     }
@@ -95,7 +100,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.v(TAG, "onCreateOptionsMenu");
-        inflater.inflate(R.menu.forecastfragment,menu);
+        inflater.inflate(R.menu.forecastfragment, menu);
     }
 
     @Override
@@ -136,9 +141,11 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
 
         String mountainViewPostCode=sp.getString(key,defVal);
         //Log.v(TAG, sp.getString(key, defVal));
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
         String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+        Intent intent = new Intent(getActivity(), SunshineService.class);
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+                Utility.getPreferredLocation(getActivity()));
+         getActivity().startService(intent);
     }
 
     @Override
@@ -147,7 +154,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
         Log.v(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         String locationSetting = Utility.getPreferredLocation(getActivity());
-        ListView lv= (ListView)rootView.findViewById(R.id.listview_forcast);
+        lv= (ListView)rootView.findViewById(R.id.listview_forcast);
 
         tempInfo.add("today-23");
         tempInfo.add("sun-23");
@@ -175,11 +182,18 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
                     ));
 
                 }
+                mPosition=position;
 
             }
         });
 
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         return rootView;
     }
     /* The date/time conversion code is going to be moved outside the asynctask later,
@@ -191,6 +205,15 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
         return shortenedDateFormat.format(time);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mPosition!=ListView.INVALID_POSITION){
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
 
     /**
      * Prepare the weather high/lows for presentation.
@@ -315,13 +338,26 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         Log.v(TAG, "onLoadFinished");
         mForecastAdapter.swapCursor(cursor);
-        //mForecastAdapter.notifyDataSetChanged();
+        if (mPosition != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restor
+            lv.smoothScrollToPosition(mPosition);
+            lv.setSelection(mPosition);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         Log.v(TAG, "onLoaderReset");
         mForecastAdapter.swapCursor(null);
+    }
+
+
+    void onLocationChanged() {
+        Log.v(TAG, "onLocationChanged");
+        // replace the uri, since the location has changed
+        updateWeather();
+        getLoaderManager().restartLoader(FORECAST_LOADER_ID, null, this);
+
     }
 
     public interface Callback {
@@ -331,11 +367,11 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
         public void onItemSelected(Uri dateUri);
 
     }
-    void onLocationChanged() {
-        Log.v(TAG, "onLocationChanged");
-        // replace the uri, since the location has changed
-        updateWeather();
-        getLoaderManager().restartLoader(FORECAST_LOADER_ID, null, this);
+    public void setUseTodayLayout(boolean useTodayLayout) {
+        mUseTodayLayout = useTodayLayout;
 
+        if (mForecastAdapter != null) {
+            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
     }
 }
