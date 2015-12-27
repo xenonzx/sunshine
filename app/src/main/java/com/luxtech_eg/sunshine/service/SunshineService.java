@@ -1,8 +1,10 @@
 package com.luxtech_eg.sunshine.service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -300,4 +302,17 @@ public class SunshineService extends IntentService {
         // Wait, that worked?  Yes!
         return locationId;
     }
-}
+    public static class AlarmReceiver extends BroadcastReceiver{
+        String TAG=AlarmReceiver.class.getSimpleName();
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.v(TAG,"onReceive");
+            Intent sendIntent = new Intent(context, SunshineService.class);
+            sendIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA));
+            context.startService(sendIntent);
+
+
+        }
+    }
+ }
