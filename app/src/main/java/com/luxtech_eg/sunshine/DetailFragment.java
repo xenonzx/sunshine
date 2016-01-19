@@ -192,6 +192,7 @@ import com.luxtech_eg.sunshine.data.WeatherContract;
         pressureView.setText(pressure);
         humidityView.setText(humidity);
         weatherIcon.setImageResource(iconID);
+        weatherIcon.setContentDescription(desc);
 
 
         // If onCreateOptionsMenu has already happened, we need to update the share intent now.
