@@ -4,34 +4,42 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="horizontal"
+    android:background="@color/sunshine_light_blue"
     >
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
         android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="60dp">
         <TextView
             android:id="@+id/list_item_date_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="tomorow"
-
+            android:textAppearance="?android:textAppearanceLarge"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/white"
 
             />
         <TextView
             android:id="@+id/list_item_high_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="max degree"
-
+            android:text="max "
+            android:textSize="72sp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/white"
             />
         <TextView
             android:id="@+id/list_item_low_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="min degree"
-
+            android:textSize="36sp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/white"
             />
 
     </LinearLayout>
@@ -40,17 +48,24 @@
         android:layout_height="match_parent"
         android:layout_weight="0.5"
         android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+        android:gravity="center"
+        >
         <ImageView
             android:id="@+id/list_item_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+
+            android:src="@drawable/art_clouds"
             />
         <TextView
-        android:id="@+id/list_item_forecast_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+            android:id="@+id/list_item_forecast_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/white"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:text="clear"
+
         />
 
     </LinearLayout>
