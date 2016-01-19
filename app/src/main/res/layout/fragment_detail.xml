@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,12 +12,19 @@
 
         <TextView
             android:id="@+id/tv_day"
-            android:text="@string/hello_world" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="@string/hello_world"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="24dp"
+            />
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="16dp"
+            android:textColor="@color/grey_700"
             />
 
         <LinearLayout
@@ -28,19 +35,28 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
                 <TextView
                     android:id="@+id/tv_max_temp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="hi"/>
+                    android:text="hi"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="96dp"
+                    android:gravity="center_horizontal"
+                    />
                 <TextView
                     android:id="@+id/tv_min_temp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="low"/>
+                    android:text="low"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="48dp"
+                    android:textColor="@color/grey_700"
+                    android:gravity="center_horizontal"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -58,7 +74,10 @@
                     android:id="@+id/tv_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="desc"/>
+                    android:text="desc"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textSize="22dp"
+                    android:textColor="@color/grey_700"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -66,17 +85,29 @@
             android:id="@+id/tv_humidity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="humidity"/>
+            android:text="humidity"
+            android:fontFamily="sans-serif-light"
+            android:textSize="22dp"
+            android:layout_marginBottom="2dp"
+            />
         <TextView
             android:id="@+id/tv_wind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="wind"/>
+            android:text="wind"
+            android:fontFamily="sans-serif-light"
+            android:textSize="22dp"
+            android:layout_marginBottom="2dp"
+            />
         <TextView
             android:id="@+id/tv_pressure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="pressure"/>
+            android:text="pressure"
+            android:fontFamily="sans-serif-light"
+            android:textSize="22dp"
+            android:layout_marginBottom="2dp"
+            />
 
 
 
