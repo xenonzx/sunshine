@@ -12,7 +12,7 @@
         android:name="com.luxtech_eg.sunshine.ForecastFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5"
+        android:layout_weight="1"
         tools:layout="@android:layout/list_content"
         />
     <FrameLayout
@@ -21,6 +21,6 @@
         android:layout_height="match_parent"
         tools:context="com.luxtech_eg.sunshine.MainActivity"
         tools:ignore="MergeRootFrame"
-        android:layout_weight="0.5"
+        android:layout_weight="2"
         />
 </LinearLayout>
