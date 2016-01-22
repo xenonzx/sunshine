@@ -8,6 +8,8 @@ import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.luxtech_eg.sunshine.sync.SunshineSyncAdapter;
+
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback{
     String TAG = MainActivity.class.getSimpleName();
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
