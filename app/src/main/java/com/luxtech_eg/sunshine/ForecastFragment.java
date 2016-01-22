@@ -1,9 +1,6 @@
 package com.luxtech_eg.sunshine;
 
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -27,7 +24,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.luxtech_eg.sunshine.data.WeatherContract;
-import com.luxtech_eg.sunshine.service.SunshineService;
+import com.luxtech_eg.sunshine.sync.SunshineSyncAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -139,6 +136,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     }
     public void updateWeather(){
         Log.v(TAG, "updateWeather");
+        /*
         String key=getString(R.string.prefs_location_key);
         String defVal = getString(R.string.prefs_location_default_value);
 
@@ -161,6 +159,9 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
 
 //Set the AlarmManager to wake up the system.
         am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
+
+        */
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     @Override

@@ -3,7 +3,13 @@
     package="com.luxtech_eg.sunshine">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <!-- Permissions required by the sync adapter -->
+    <uses-permission
+        android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,9 +32,21 @@
         </activity>
         <provider
             android:authorities="com.luxtech_eg.sunshine"
-            android:name=".data.WeatherProvider"/>
+            android:name=".data.WeatherProvider"
+            android:exported="false"
+            android:syncable="true"/>
         <service android:name=".service.SunshineService"/>
         <receiver android:name=".service.SunshineService$AlarmReceiver" android:enabled="true"/>
+        <service
+            android:name=".sync.SunshineAuthenticatorService"
+            >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
     </application>
 
 </manifest>
