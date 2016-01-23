@@ -40,7 +40,7 @@ import java.util.Locale;
 public  class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     static final int FORECAST_LOADER_ID=0;
     String TAG=ForecastFragment.class.getSimpleName();
-    final static String appid="2de143494c0b295cca9337e1e96b00e0";
+    final static String appid=AppIDHolder.appikey;
     final static String SELECTED_KEY="selected_list_item";
     private boolean mUseTodayLayout;
 

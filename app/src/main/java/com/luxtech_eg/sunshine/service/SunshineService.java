@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.luxtech_eg.sunshine.AppIDHolder;
 import com.luxtech_eg.sunshine.data.WeatherContract;
 
 import org.json.JSONArray;
@@ -29,7 +30,7 @@ import java.util.Vector;
  * Created by ahmed on 27/12/15.
  */
 public class SunshineService extends IntentService {
-    final static String appid="2de143494c0b295cca9337e1e96b00e0";
+    final static String appid= AppIDHolder.appikey;
     public static final String LOCATION_QUERY_EXTRA = "lqe";
     private final String LOG_TAG = SunshineService.class.getSimpleName();
     public SunshineService() {

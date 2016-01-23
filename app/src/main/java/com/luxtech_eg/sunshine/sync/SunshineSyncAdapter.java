@@ -24,6 +24,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.luxtech_eg.sunshine.AppIDHolder;
 import com.luxtech_eg.sunshine.MainActivity;
 import com.luxtech_eg.sunshine.R;
 import com.luxtech_eg.sunshine.Utility;
@@ -44,7 +45,7 @@ import java.util.Vector;
 
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
-    final static String appid="2de143494c0b295cca9337e1e96b00e0";
+    final static String appid= AppIDHolder.appikey;
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 

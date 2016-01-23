@@ -40,7 +40,7 @@ import java.net.URL;
 import java.util.Vector;
 
 public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
-    final static String appid="2de143494c0b295cca9337e1e96b00e0";
+    final static String appid= AppIDHolder.appikey;
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
     private final Context mContext;
