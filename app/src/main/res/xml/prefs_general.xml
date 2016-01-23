@@ -14,5 +14,11 @@
         android:defaultValue="@string/pref_temp_setting_default"
         android:entries="@array/pref_temp_settings_entries"
         android:entryValues="@array/pref_temp_settings_values" />
+    <CheckBoxPreference
+        android:key="@string/show_notification_pref_key"
+        android:title="@string/show_notification_pref_title"
+        android:defaultValue="true"
+        />
+
 
 </PreferenceScreen>
